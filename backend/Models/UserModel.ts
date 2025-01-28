@@ -1,7 +1,8 @@
 import mongoose from "mongoose"
 import {Schema,Document} from "mongoose"
 import validator from "validator"
-const roleEnum = ["user", "admin", "moderator"];
+const roleEnum = ["user", "admin"];
+import bcrypt from "bcryptjs"
 interface IUser extends Document {
     name: string;
     email: string;
@@ -54,5 +55,21 @@ const UserSchema=new Schema({
       },
     
 },{timestamps:true})
+//hash passwords before saving
+//runs before the document is saved in document hence the pre 
+UserSchema.pre('save', async function(next) {
+  // Check if the password field was modified 
+  //this refers to the current field
+  if (this.isModified('password')) {
+    // Hash the password before saving
+    //this.password refers to users password which will be hashed and 10 refers to how much time to be spent
+    //in hashing the more rounds the  stronger the security
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  // after hashing save the document
+  next();
+});
+
 const User = mongoose.model<IUser>('User', UserSchema);
 export default User;

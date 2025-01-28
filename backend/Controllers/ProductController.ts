@@ -16,17 +16,16 @@ try{
 // Create a new product
 export const CreateProduct = async (req: Request, res: Response):Promise<void> => {
     try {
-      const { owner, name, description, category, price } = req.body;
+      const {  name, description, category, price } = req.body;
   
       // Validation: Ensure that the required fields are present
-      if (!owner || !name || !description || !category || !price) {
+      if ( !name || !description || !category || !price) {
          res.status(400).json({ message: 'All fields are required' });
          return;
       }
   
       // Create a new product
       const product = new Product({
-        owner,
         name,
         description,
         category,
@@ -46,3 +45,68 @@ export const CreateProduct = async (req: Request, res: Response):Promise<void> =
     }
   };
   
+  //fetch an item by  an id
+  export const getProductById=async (req: Request, res: Response):Promise<void>=>{
+    try{
+      const productId=req.params.ProductId;
+      const product=await Product.findById(productId);
+      if(!product){
+        res.status(404).json({message:"product not found"});
+      }
+      res.status(200).json({product})
+    }catch(error){
+      res.status(500).json({message:"server error"})
+    }
+  }
+
+// Update a product by its ID
+export const updateProduct = async (req: Request, res: Response):Promise<void> => {
+  try {
+    const { name, description, category, price } = req.body;
+    const productId = req.params.productId;
+
+    // Find the product and update its details
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        name,
+        description,
+        category,
+        price,
+      },
+      { new: true } // Returns the updated product
+    );
+
+    if (!updatedProduct) {
+       res.status(404).json({ message: 'Product not found' });
+    }
+
+     res.status(200).json({
+      message: 'Product updated successfully',
+      product: updatedProduct,
+    });
+  } catch (error) {
+     res.status(500).json({ message: 'Server Error', error });
+  }
+};
+
+// Delete a product by its ID
+export const deleteProduct = async (req: Request, res: Response):Promise<void> => {
+  try {
+    const productId = req.params.productId;
+
+    // Find the product and delete it
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+       res.status(404).json({ message: 'Product not found' });
+    }
+
+     res.status(200).json({
+      message: 'Product deleted successfully',
+      product: deletedProduct,
+    });
+  } catch (error) {
+     res.status(500).json({ message: 'Server Error', error });
+  }
+};
