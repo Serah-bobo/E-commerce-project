@@ -1,13 +1,15 @@
-import mongoose from "mongoose"
+import mongoose, { Types } from "mongoose"
 import {Schema,Document} from "mongoose"
 import validator from "validator"
 const roleEnum = ["user", "admin"];
 import bcrypt from "bcryptjs"
 interface IUser extends Document {
+  _id:Types.ObjectId
     name: string;
     email: string;
     password: string;
     tokens: { token: string }[];
+    matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
 const UserSchema=new Schema({
@@ -55,6 +57,10 @@ const UserSchema=new Schema({
       },
     
 },{timestamps:true})
+// Method to match password while logging in
+UserSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 //hash passwords before saving
 //runs before the document is saved in document hence the pre 
 UserSchema.pre('save', async function(next) {
