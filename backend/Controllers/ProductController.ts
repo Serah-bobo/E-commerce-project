@@ -1,5 +1,10 @@
 import Product from "../Models/ProductModel";
-import {Request, Response} from "express"
+import { Request, Response } from "express"
+
+// Extend the Request interface to include userID
+interface CustomRequest extends Request {
+  userID?: string;
+}
 import { IProduct } from "../Models/ProductModel";
 //get all products
 export const getAllProducts=async (req: Request, res: Response): Promise<void>=>{
@@ -8,13 +13,13 @@ try{
     if(products.length===0){
         res.status(404).json({message:"No products found"})
     }
-    res.status(200).json({products})
-}catch(error){
-    res.status(500).json({message:"Server error"})
+    res.status(200).json({products});
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
 }
 }
 // Create a new product
-export const CreateProduct = async (req: Request, res: Response):Promise<void> => {
+export const CreateProduct = async (req: CustomRequest, res: Response):Promise<void> => {
     try {
       const {  name, description, category, price } = req.body;
   
@@ -30,6 +35,7 @@ export const CreateProduct = async (req: Request, res: Response):Promise<void> =
         description,
         category,
         price,
+        owner:req.userID
       });
   
       // Save the product in the database

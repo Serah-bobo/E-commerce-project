@@ -1,7 +1,12 @@
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import User from "../Models/UserModel"
-import {Request,Response} from 'express'
+import { Request, Response } from 'express'
+
+// Define the AuthenticatedRequest interface
+interface AuthenticatedRequest extends Request {
+  userID?: string;
+}
 dotenv.config()//to enable dotenv configuration in config file 
 
 // Function to generate an authentication token
@@ -32,14 +37,14 @@ const generateToken = async (id: string): Promise<string> => {
     }
   };
 // Register a new user
-export const registerUser = async (req: Request, res: Response)=> {
+export const registerUser = async (req: Request, res: Response):Promise<void>=> {
   const { name, email, password, role } = req.body;
 
   try {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ msg: 'User already exists!' });
+       res.status(400).json({ msg: 'User already exists!' });
     }
 
     // Create new user
@@ -53,35 +58,50 @@ export const registerUser = async (req: Request, res: Response)=> {
     await newUser.save();
     const token = await generateToken(newUser._id.toString());
     res.status(201).json({ token, user: newUser });
-  } catch (err) {
-    res.status(500).json({ msg: err.message });
+  } catch (error) {
+    res.status(500).json({ msg: (error as Error).message });
   }
 };
 //login
-export const loginUser=async(req: Request, res: Response) => {
+export const loginUser=async(req: Request, res: Response):Promise<void> => {
   const {email,password}=req.body;
   try{
     const user=await User.findOne({email})
     if(!user){
-       return  res.status(400).json({msg:"user not found"});
+        res.status(400).json({msg:"user not found"});
+        return;
     }
     //check if password matches
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
           res.status(400).json({ msg: 'Invalid credentials' });
+          return;
     }
 
     const token = await generateToken(user._id.toString());
     res.status(201).json({ token, user });
-  }catch(err){
-    res.status(500).json({ msg: err.message });
+  }catch(error){
+    res.status(500).json({ msg: (error as Error).message });
   }
 }
-// Get user details (protected route)
-export const getUser = async (req: any, res: any) => {
-  const user = await User.findById(req.userId);
-  if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+// Get  user details (protected route)
+export const getUser = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  console.log("Extracted User ID:", req.userID); // Debugging log
+
+  if (!req.userID) {
+     res.status(400).json({ msg: "User ID is missing from request" });
   }
+
+  const user = await User.findById(req.userID);
+  if (!user) {
+     res.status(404).json({ msg: "User not found" });
+  }
+
   res.json(user);
 };
+
+//get all users
+export const getAllUsers=async (req: Request, res: Response):Promise<void>=>{
+  const getUsers=await User.find({},{password:0})//exclude password field
+  res.status(200).json(getUsers)
+}

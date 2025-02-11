@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs"
 interface IUser extends Document {
   _id:Types.ObjectId
     name: string;
+    role:string
     email: string;
     password: string;
     tokens: { token: string }[];
@@ -33,7 +34,7 @@ const UserSchema=new Schema({
         type: String,
         required: true,
         minLength: 7,
-        maxLength:12,
+        maxLength:20,
         trim: true,//remove an extra white spaces
         validate(value: string): void {
            if(value.toLowerCase().includes("password")) {

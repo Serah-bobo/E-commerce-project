@@ -5,7 +5,6 @@ import express from 'express';
 dotenv.config(); // load env variables
 
 const mongoURI = process.env.MONGO_URI;
-console.log(mongoURI)
 const connectDB = async (): Promise<void> => {
     if (!mongoURI) {
         throw new Error('MONGO_URI environment variable is not defined');
