@@ -1,7 +1,14 @@
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
-import User from "../Models/UserModel"
+import User from "../Models/UserModel";
 import { Request, Response } from 'express'
+
+
+// Extend the Request interface to include token and User properties
+interface AuthenticatedRequest extends Request {
+  token?: string;
+  user?: InstanceType<typeof User>;
+}
 
 // Define the AuthenticatedRequest interface
 interface AuthenticatedRequest extends Request {
@@ -100,8 +107,25 @@ export const getUser = async (req: AuthenticatedRequest, res: Response): Promise
   res.json(user);
 };
 
-//get all users
+
 export const getAllUsers=async (req: Request, res: Response):Promise<void>=>{
   const getUsers=await User.find({},{password:0})//exclude password field
   res.status(200).json(getUsers)
 }
+//log out a single session
+export const logOut = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user || !req.token) {
+       res.status(400).json({ msg: "User is not authenticated" });
+       return;
+    }
+
+    // ✅ Remove only the current session token
+    req.user.tokens = req.user.tokens.filter((t: { token: string }) => t.token !== req.token);
+    await req.user.save();
+
+    res.json({ msg: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ msg: (error as Error).message });
+  }
+};
