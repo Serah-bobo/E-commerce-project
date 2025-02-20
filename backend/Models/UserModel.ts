@@ -34,7 +34,6 @@ const UserSchema=new Schema({
         type: String,
         required: true,
         minLength: 7,
-        maxLength:20,
         trim: true,//remove an extra white spaces
         validate(value: string): void {
            if(value.toLowerCase().includes("password")) {

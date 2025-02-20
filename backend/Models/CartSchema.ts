@@ -1,12 +1,18 @@
 import mongoose from 'mongoose';
 import { Schema,Document,Types } from 'mongoose';
+export interface ICartItem {
+  itemID: Types.ObjectId; // Correct the property name to match `cart.items`
+  name: string;
+  quantity: number;
+  price: number;
+}
 
 export interface ICart extends Document {
-  user: Types.ObjectId;             
-  items: Types.Array<Types.ObjectId>;
-
+  owner: Types.ObjectId;             
+  items: ICartItem[];  // ⬅️ Fix this to store an array of objects, not ObjectId[]
   totalPrice: number;              
 }
+
 const cartSchema = new Schema({
   owner: {
     type: Types.ObjectId,  // Use Types
@@ -15,7 +21,7 @@ const cartSchema = new Schema({
   },
   items: [{
     //referencing that itemid is the product id
-    itemId: {
+    itemID: {
       type: Types.ObjectId,  // Use Types.ObjectId
       ref: 'Product',  // Reference to the product model
       required: true

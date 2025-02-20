@@ -86,6 +86,11 @@ export const loginUser=async(req: Request, res: Response):Promise<void> => {
     }
 
     const token = await generateToken(user._id.toString());
+user.tokens.push({ token });
+console.log("Saving token to DB:", token); // Debugging log
+await user.save();
+console.log("User tokens after saving:", user.tokens);
+
     res.status(201).json({ token, user });
   }catch(error){
     res.status(500).json({ msg: (error as Error).message });
@@ -113,7 +118,7 @@ export const getAllUsers=async (req: Request, res: Response):Promise<void>=>{
   res.status(200).json(getUsers)
 }
 //log out a single session
-export const logOut = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+{/*export const logOut = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     if (!req.user || !req.token) {
        res.status(400).json({ msg: "User is not authenticated" });
@@ -128,4 +133,4 @@ export const logOut = async (req: AuthenticatedRequest, res: Response): Promise<
   } catch (error) {
     res.status(500).json({ msg: (error as Error).message });
   }
-};
+};*/}

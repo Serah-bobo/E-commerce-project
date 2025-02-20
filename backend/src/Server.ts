@@ -3,13 +3,17 @@ import dotenv from 'dotenv';
 import connectDB from '../config/Database';
 import ProductRoute from "../Routes/ProductRoutes"
 import AuthRoute from '../Routes/AuthRoutes'
+import CartRoute from "../Routes/CartRoute"
 dotenv.config(); // Load environment variables
 
 const app = express();
 app.use(express.json())
-
+//product
 app.use("/api/products", ProductRoute)
+//auth
 app.use("/api/auth", AuthRoute)
+//cart
+app.use('/api',CartRoute)
 
 // Root route
 app.get("/", (req, res) => {

@@ -36,5 +36,6 @@ const ProductSchema=new Schema({
         required: true
      }
 },{timestamps:true})
-const Product=mongoose.model<IProduct>("product",ProductSchema)
+const Product = mongoose.model<IProduct>("Product", ProductSchema);  // ✅ Capitalized "Product"
 export default Product;
+
