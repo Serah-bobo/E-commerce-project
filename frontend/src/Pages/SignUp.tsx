@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { registerUser } from 'Reducer/Api';
-import { useNavigation, redirect, useActionData } from 'react-router-dom';
+import { useNavigation, redirect, useActionData ,Link} from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaLock, FaUser } from 'react-icons/fa';
 import { useState } from 'react';
 
@@ -129,6 +129,12 @@ const SignUp = () => {
                   >
                       {navigation.state === "submitting" ? "Signing up..." : "Sign Up"}
                   </button>
+                  {/* Forgot Password & Sign Up Links */}
+                 {/* Forgot Password & Sign Up Links */}
+                 <div className="flex justify-between mt-4 text-sm">
+                        <button type="button" className="text-blue-500 hover:underline">Forgot Password?</button>
+                        <Link to="/login" className="text-blue-500 cursor-pointer hover:underline">Login</Link>
+                    </div>
               </form> 
            </div>
         </div>

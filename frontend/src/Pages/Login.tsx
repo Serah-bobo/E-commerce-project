@@ -1,5 +1,5 @@
 import { LoginUser } from "Reducer/Api";
-import { useNavigation, redirect, useActionData } from 'react-router-dom';
+import { useNavigation, redirect, useActionData,Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaLock, FaEnvelope } from "react-icons/fa";
 import { useState } from "react";
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -112,6 +112,11 @@ const Login = () => {
   >
     {navigation.state === "submitting" ? "Logging in..." : "Login"}
   </button>
+             {/* Forgot Password & Sign Up Links */}
+             <div className="flex justify-between mt-4 text-sm">
+                        <button type="button" className="text-blue-500 hover:underline">Forgot Password?</button>
+                        <Link to="/signup" className="text-blue-500 cursor-pointer hover:underline">Sign Up</Link>
+                    </div>
 </form> 
       </div>
     </div>
