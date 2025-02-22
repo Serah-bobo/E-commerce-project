@@ -1,6 +1,6 @@
 import express from 'express';
 import { registerUser,getUser,getAllUsers,loginUser } from '../Controllers/AuthController';
-
+import { logOut } from '../Controllers/AuthController';
 import { AuthMiddleware,authorize } from '../Middleware/AuthMiddleware';
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.get('/user', AuthMiddleware, getUser);
 //get all users
 router.get('/users',AuthMiddleware,getAllUsers)
 //logout single session
-//router.post('/logout', AuthMiddleware, logOut)
+router.post('/logout', AuthMiddleware, logOut)
 
 // Admin/Moderator Only Route - Protect route for admin/moderator
 router.get('/admin', AuthMiddleware, authorize('admin', 'user'), (req, res) => {

@@ -52,6 +52,7 @@ export const registerUser = async (req: Request, res: Response):Promise<void>=> 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
        res.status(400).json({ msg: 'User already exists!' });
+       return
     }
 
     // Create new user
@@ -65,8 +66,10 @@ export const registerUser = async (req: Request, res: Response):Promise<void>=> 
     await newUser.save();
     const token = await generateToken(newUser._id.toString());
     res.status(201).json({ token, user: newUser });
+    return
   } catch (error) {
     res.status(500).json({ msg: (error as Error).message });
+    return
   }
 };
 //login
@@ -118,7 +121,7 @@ export const getAllUsers=async (req: Request, res: Response):Promise<void>=>{
   res.status(200).json(getUsers)
 }
 //log out a single session
-{/*export const logOut = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const logOut = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     if (!req.user || !req.token) {
        res.status(400).json({ msg: "User is not authenticated" });
@@ -133,4 +136,4 @@ export const getAllUsers=async (req: Request, res: Response):Promise<void>=>{
   } catch (error) {
     res.status(500).json({ msg: (error as Error).message });
   }
-};*/}
+};
