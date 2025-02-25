@@ -1,9 +1,12 @@
 import Product from "../Models/ProductModel";
 import { Request, Response } from "express"
 
-// Extend the Request interface to include userID
+// Extend the Request interface to include userID and user
 interface CustomRequest extends Request {
   userID?: string;
+  user?: {
+    role: string;
+  };
 }
 import { IProduct } from "../Models/ProductModel";
 //get all products
@@ -12,10 +15,12 @@ try{
     const products=await Product.find()
     if(products.length===0){
         res.status(404).json({message:"No products found"})
+        return;
     }
     res.status(200).json({products});
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
+    return;
 }
 }
 // Create a new product
@@ -23,6 +28,12 @@ export const CreateProduct = async (req: CustomRequest, res: Response):Promise<v
     try {
       const {  name, description, category, price } = req.body;
   
+
+    // Ensure only admins can create products
+    if (!req.user || req.user.role !== "admin") {
+       res.status(403).json({ message: "Access denied. Admins only." });
+       return;
+    }
       // Validation: Ensure that the required fields are present
       if ( !name || !description || !category || !price) {
          res.status(400).json({ message: 'All fields are required' });
@@ -48,6 +59,7 @@ export const CreateProduct = async (req: CustomRequest, res: Response):Promise<v
       });
     } catch (error) {
       res.status(500).json({ message: 'Server Error', error });
+      return;
     }
   };
   
@@ -58,16 +70,23 @@ export const CreateProduct = async (req: CustomRequest, res: Response):Promise<v
       const product=await Product.findById(productId);
       if(!product){
         res.status(404).json({message:"product not found"});
+        return;
       }
       res.status(200).json({product})
     }catch(error){
       res.status(500).json({message:"server error"})
+      return;
     }
   }
 
 // Update a product by its ID
-export const updateProduct = async (req: Request, res: Response):Promise<void> => {
+export const updateProduct = async (req: CustomRequest, res: Response):Promise<void> => {
   try {
+     // Ensure only admins can update products
+     if (!req.user || req.user.role !== "admin") {
+      res.status(403).json({ message: "Access denied. Admins only." });
+      return;
+   }
     const { name, description, category, price } = req.body;
     const productId = req.params.productId;
 
@@ -85,6 +104,7 @@ export const updateProduct = async (req: Request, res: Response):Promise<void> =
 
     if (!updatedProduct) {
        res.status(404).json({ message: 'Product not found' });
+       return;
     }
 
      res.status(200).json({
@@ -93,12 +113,18 @@ export const updateProduct = async (req: Request, res: Response):Promise<void> =
     });
   } catch (error) {
      res.status(500).json({ message: 'Server Error', error });
+     return;
   }
 };
 
 // Delete a product by its ID
-export const deleteProduct = async (req: Request, res: Response):Promise<void> => {
+export const deleteProduct = async (req: CustomRequest, res: Response):Promise<void> => {
   try {
+     // Ensure only admins can delete products
+     if (!req.user || req.user.role !== "admin") {
+      res.status(403).json({ message: "Access denied. Admins only." });
+      return;
+   }
     const productId = req.params.productId;
 
     // Find the product and delete it
@@ -106,6 +132,7 @@ export const deleteProduct = async (req: Request, res: Response):Promise<void> =
 
     if (!deletedProduct) {
        res.status(404).json({ message: 'Product not found' });
+       return;
     }
 
      res.status(200).json({

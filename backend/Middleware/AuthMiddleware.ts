@@ -85,18 +85,15 @@ export const AuthMiddleware = async (
     return;
   }
 };
-export const authorize = (...roles: string[]) => {
-  return async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const user = await User.findById(req.userID);
-      if (!user || !roles.includes(user.role)) {
-        res.status(403).json({ msg: "Access denied" });
-        return;
-      }
-      next();
-    } catch (err) {
-      res.status(500).json({ msg: err instanceof Error ? err.message : "An unknown error occurred" });
-      return;
+export const authorizeAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const user = await User.findById(req.userID);
+    if (!user || user.role !== "admin") {
+       res.status(403).json({ msg: "Access denied. Admins only." });
+       return;
     }
-  };
+    next();
+  } catch (err) {
+    res.status(500).json({ msg: "Server error", error: err });
+  }
 };
