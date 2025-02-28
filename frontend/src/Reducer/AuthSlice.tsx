@@ -1,34 +1,48 @@
-// Import `createSlice` to easily create Redux reducers and actions
-// Import `PayloadAction` to define the type of action payloads
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the authentication state interface
 interface AuthState {
-    token: string | null; // The token is either a string (if logged in) or null (if not logged in)
+    token: string | null;
+    role: "user" | "admin" | null; // Store the user role
 }
 
 // Define the initial state for authentication
 const initialState: AuthState = {
-    token: localStorage.getItem('token') || null, // Retrieve token from local storage to persist login after refresh
+    token: localStorage.getItem("token") || null,
+    role: (localStorage.getItem("role") as "user" | "admin") || null, // Retrieve role from localStorage
 };
 
 // Create a Redux slice (a modular piece of state management)
 const AuthSlice = createSlice({
-    name: 'auth', // The name of this slice in the Redux store
-    initialState, // Set the initial state
+    name: "auth",
+    initialState,
 
-    // Define the reducers (functions that modify state)
     reducers: {
         // Reducer to handle login action
-        login(state, action: PayloadAction<{ token: string }>) {
-            state.token = action.payload.token; // Set the token from the action payload
+        login(
+            state,
+            action: PayloadAction<{ token: string; role: "user" | "admin" }>
+        ) {
+            state.token = action.payload.token;
+            state.role = action.payload.role;
+
+            localStorage.setItem("token", action.payload.token); // Store token
+            localStorage.setItem("role", action.payload.role); // Store user role
+            localStorage.setItem("loggedin", "true");
+
         },
+
         // Reducer to handle logout action
         logout: (state) => {
-            state.token = null; // Remove the token from state
-            localStorage.removeItem('token'); // Remove token from local storage when logging out
-        }
-    }
+            state.token = null;
+            state.role = null;
+
+            localStorage.removeItem("token"); // Remove token from local storage
+            localStorage.removeItem("role"); // Remove role from local storage
+            localStorage.removeItem("loggedin");
+
+        },
+    },
 });
 
 // Export actions to be used in React components

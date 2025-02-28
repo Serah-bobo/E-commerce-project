@@ -1,17 +1,25 @@
-import React, { JSX } from "react";
+
 import { Route } from "react-router-dom";
-import { createBrowserRouter, createRoutesFromElements, RouterProvider, Navigate } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
 import Layout from "./Components/Layout";
 import SignUp from "Pages/SignUp";
 import Login from "Pages/Login";
 import Logout from "Pages/Logout"; // Import Logout page
+import AdminRoute from "Admin/Routes/AdminRoute";
+import AdminLayout from "Admin/Layout/AdminLayout";
+import ProductList from "Admin/Pages/ProductList";
+import { JSX } from "react";
+
+import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const isLoggedIn = localStorage.getItem("loggedin") === "true";
   return isLoggedIn ? children : <Navigate to="/signup" replace />;
-};
+};  
+
+
 
 const App = () => {
   const router = createBrowserRouter(
@@ -24,7 +32,12 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
         </Route>
-      </>
+        {/* Admin Routes */}
+      <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>} >
+      <Route index element={<ProductList/>}/>
+      </Route>
+      
+    </>
     )
   );
 

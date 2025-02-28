@@ -4,12 +4,13 @@ import { configureStore } from "@reduxjs/toolkit";
 // Import the authentication reducer from the `AuthSlice` file.
 // This reducer will manage the authentication state of the application.
 import authReducer from "./AuthSlice";
-
+import productReducer from './ProductReducer/ProductSlice'
 // Create and configure the Redux store.
 export const store = configureStore({
     reducer: {
         // The `auth` slice manages authentication-related state (e.g., login, logout, token storage).
         auth: authReducer, 
+        product: productReducer,  // The `product` slice manages product-related state (e.g., fetching products, adding products)  // Add other slices as needed.  // Add other slices as needed.  // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed
     },
 });
 

@@ -7,12 +7,14 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Check if the user is an admin
+  const isAdmin = localStorage.getItem("role") === "admin";
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
   const handleLogout = () => {
-    navigate("/logout"); // Redirect to logout page
+    navigate("/login"); // Redirect to logout page
   };
 
   const activeStyles = {
@@ -45,12 +47,23 @@ const Navbar = () => {
             <Link
               to="/about"
               style={location.pathname === "/about" ? activeStyles : undefined}
-              className="px-3 py-2 text-sm font-medium text-gray-700 rounded-md cursor-pointer hover:bg-gray-200"
+              className="px-3 py-2 font-bold text-black rounded-md cursor-pointer text-md hover:bg-gray-200"
             >
               ABOUT
             </Link>
+            {/* Admin Dashboard Link */}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                style={location.pathname === "/admin" ? activeStyles : undefined}
+                className="px-3 py-2 font-bold text-black rounded-md cursor-pointer text-md hover:bg-gray-200"
+              >
+                DASHBOARD
+              </Link>
+            )}
           </div>
-
+          
+          
           {/* Mobile Menu Button */}
           <div className="sm:hidden">
             <button
@@ -81,11 +94,21 @@ const Navbar = () => {
           <Link
             to="/about"
             style={location.pathname === "/about" ? activeStyles : undefined}
-            className="block px-3 py-2 text-base font-medium text-gray-700 rounded-md cursor-pointer hover:bg-gray-200"
+            className="block px-3 py-2 text-base font-bold text-black rounded-md cursor-pointer hover:bg-gray-200"
           >
-            About
+            ABOUT
           </Link>
-
+                
+                 {/* Admin Dashboard Link for Mobile Menu */}
+          {isAdmin && (
+            <Link
+              to="/admin"
+              style={location.pathname === "/admin" ? activeStyles : undefined}
+              className="block px-3 py-2 text-base font-bold text-black rounded-md cursor-pointer hover:bg-gray-200"
+            >
+              Dashboard
+            </Link>
+          )}
          
         </div>
       </div>

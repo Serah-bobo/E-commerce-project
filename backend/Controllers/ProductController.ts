@@ -26,27 +26,35 @@ try{
 // Create a new product
 export const CreateProduct = async (req: CustomRequest, res: Response):Promise<void> => {
     try {
-      const {  name, description, category, price } = req.body;
-  
-
+      console.log("Request body:", req.body);
+      console.log("Request file:", req.file);
+      
+      const { name, description, category, price } = req.body;
+      const image = req.file ? `/uploads/${req.file.filename}` : ""; // Store image path
+      
+      console.log("Image path:", image);
+      
     // Ensure only admins can create products
     if (!req.user || req.user.role !== "admin") {
        res.status(403).json({ message: "Access denied. Admins only." });
        return;
     }
       // Validation: Ensure that the required fields are present
-      if ( !name || !description || !category || !price) {
+      if ( !name || !description || !category || !price || !image ) {
          res.status(400).json({ message: 'All fields are required' });
          return;
       }
-  
+     
+
+      
       // Create a new product
       const product = new Product({
         name,
         description,
         category,
+       image,
         price,
-        owner:req.userID
+        owner: req.userID
       });
   
       // Save the product in the database
@@ -57,6 +65,8 @@ export const CreateProduct = async (req: CustomRequest, res: Response):Promise<v
         message: 'Product created successfully',
         product: savedProduct,
       });
+      console.log(req.file); // Check if Multer processes the image
+
     } catch (error) {
       res.status(500).json({ message: 'Server Error', error });
       return;
@@ -66,7 +76,7 @@ export const CreateProduct = async (req: CustomRequest, res: Response):Promise<v
   //fetch an item by  an id
   export const getProductById=async (req: Request, res: Response):Promise<void>=>{
     try{
-      const productId=req.params.ProductId;
+      const productId=req.params.productId;
       const product=await Product.findById(productId);
       if(!product){
         res.status(404).json({message:"product not found"});
@@ -88,8 +98,18 @@ export const updateProduct = async (req: CustomRequest, res: Response):Promise<v
       return;
    }
     const { name, description, category, price } = req.body;
-    const productId = req.params.productId;
+    const productId = req.params.id;
 
+    const product = await Product.findById(productId);
+    if (!product) {
+      res.status(404).json({ message: "Product not found" });
+      return;
+    }
+     // Handle image update if a file is uploaded
+     let image = product.image; // Keep existing image by default
+     if (req.file) {
+       image = req.file.path; // Multer saves file and sets the path
+     }
     // Find the product and update its details
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
@@ -98,6 +118,7 @@ export const updateProduct = async (req: CustomRequest, res: Response):Promise<v
         description,
         category,
         price,
+        image,
       },
       { new: true } // Returns the updated product
     );
@@ -117,29 +138,27 @@ export const updateProduct = async (req: CustomRequest, res: Response):Promise<v
   }
 };
 
-// Delete a product by its ID
-export const deleteProduct = async (req: CustomRequest, res: Response):Promise<void> => {
+// Delete a product
+export const deleteProduct = async (req: CustomRequest, res: Response): Promise<void> => {
   try {
-     // Ensure only admins can delete products
-     if (!req.user || req.user.role !== "admin") {
+    if (!req.user || req.user.role !== "admin") {
       res.status(403).json({ message: "Access denied. Admins only." });
       return;
-   }
-    const productId = req.params.productId;
-
-    // Find the product and delete it
-    const deletedProduct = await Product.findByIdAndDelete(productId);
-
-    if (!deletedProduct) {
-       res.status(404).json({ message: 'Product not found' });
-       return;
     }
 
-     res.status(200).json({
-      message: 'Product deleted successfully',
-      product: deletedProduct,
-    });
+    const productId = req.params.productId;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      res.status(404).json({ message: "Product not found" });
+      return;
+    }
+
+   
+    await Product.findByIdAndDelete(productId);
+
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
-     res.status(500).json({ message: 'Server Error', error });
+    res.status(500).json({ message: "Server Error", error });
   }
 };

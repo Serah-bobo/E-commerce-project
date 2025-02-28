@@ -28,6 +28,9 @@ export const registerUser=async(name:string,email:string,password:string):Promis
       }
       
       localStorage.setItem("token",data.token);//store token in localstorage
+      localStorage.setItem("role", data.user.role); // Save role
+      localStorage.setItem("loggedin", "true");
+
       return data
     } catch (error) {
       throw error;
@@ -50,6 +53,9 @@ export const LoginUser=async(email:string,password:string):Promise<AuthResponse>
         }
 
         localStorage.setItem("token", data.token); // store token in localstorage
+        localStorage.setItem("role", data.user.role); // Save role
+        localStorage.setItem("loggedin", "true");
+
         return data;
     } catch (error) {
         throw error;
@@ -74,6 +80,9 @@ export const LogOutUser = async () => {
         }
 
         localStorage.removeItem("token"); // Clear token on successful logout
+        localStorage.removeItem("role");
+        localStorage.removeItem("loggedin");
+
         return true;
     } catch (error) {
         console.error("Error logging out:", error);

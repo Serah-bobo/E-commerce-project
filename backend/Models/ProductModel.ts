@@ -7,7 +7,8 @@ export interface IProduct extends Document {
     name: string;                  // Name of the product (String)
     description: string;           // Description of the product (String)
     category: string;              // Category of the product (String)
-    price: number;                 // Price of the product (Number)
+    price: number; 
+    image:string;                // image of product
   }
   
 const ProductSchema=new Schema({
@@ -34,8 +35,14 @@ const ProductSchema=new Schema({
      price: {
         type: Number,
         required: true
+     },
+     image:{
+      type:String,
+      required:true,
      }
-},{timestamps:true})
-const Product = mongoose.model<IProduct>("Product", ProductSchema);  // ✅ Capitalized "Product"
+
+},
+{timestamps:true})
+const Product = mongoose.model<IProduct>("Product", ProductSchema);  
 export default Product;
 
