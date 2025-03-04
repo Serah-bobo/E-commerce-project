@@ -28,12 +28,12 @@ const Home = () => {
   <p className="mt-4 text-lg font-medium text-gray-700 md:text-xl">
     Unique, stylish, and crafted with love.
   </p>
-  <a
-    href="/shop"
+  <Link
+    to='/products'
     className="inline-block px-6 py-3 mt-6 text-lg font-semibold text-white transition-all duration-300 transform shadow-xl bg-gradient-to-r from-pink-500 to-red-400 rounded-xl hover:scale-105 hover:shadow-2xl"
   >
     Shop Now
-  </a>
+  </Link>
   </div>
    </section>
    {/* Featured Items Section */}

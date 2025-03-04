@@ -10,17 +10,13 @@ export interface Product {
 
   //fetch all products
   export const FetchAllProducts=async(
-    id:String,
-    page: number,
-  limit: number,
-  sort: string,
-  filter: string
+    id:String
   )=>{
     
     try{
       const response = await fetch
       (
-        `${API_URL}?page=${page}&limit=${limit}&sort=latest&filter=all`
+        `${API_URL}`
       );
       const data=await response.json()
       if(!response.ok){

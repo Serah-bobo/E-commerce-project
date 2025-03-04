@@ -13,7 +13,7 @@ import ProductList from "Admin/Pages/ProductList";
 import { JSX } from "react";
 
 import { Navigate } from "react-router-dom";
-
+import Products, {loader as productLoader} from "Pages/Products";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const isLoggedIn = localStorage.getItem("loggedin") === "true";
   return isLoggedIn ? children : <Navigate to="/signup" replace />;
@@ -31,6 +31,11 @@ const App = () => {
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
+          <Route
+           path="products" 
+           element={<Products/>}
+           loader={productLoader}
+            />
         </Route>
         {/* Admin Routes */}
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>} >

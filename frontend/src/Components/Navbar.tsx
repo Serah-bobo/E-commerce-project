@@ -60,7 +60,15 @@ const Navbar = () => {
               >
                 DASHBOARD
               </Link>
+              
             )}
+            <Link
+              to="/products"
+              style={location.pathname === "/products" ? activeStyles : undefined}
+              className="px-3 py-2 font-bold text-black rounded-md cursor-pointer text-md hover:bg-gray-200"
+            >
+              PRODUCTS
+            </Link>
           </div>
           
           
@@ -109,7 +117,13 @@ const Navbar = () => {
               Dashboard
             </Link>
           )}
-         
+         <Link
+            to="/products"
+            style={location.pathname === "/products" ? activeStyles : undefined}
+            className="block px-3 py-2 text-base font-bold text-black rounded-md cursor-pointer hover:bg-gray-200"
+          >
+            PRODUCTS
+          </Link>
         </div>
       </div>
     </nav>
