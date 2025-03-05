@@ -46,3 +46,16 @@ export interface Product {
       throw error
     }
   }
+  //get product by id
+  export const GetProductById=async(id:string)=>{
+    try{
+      const response = await fetch(`${API_URL}/${id}`);
+      const data=await response.json()
+      if(!response.ok){
+        throw new Error("Failed to fetch product")
+      }
+      return data;
+    }catch(error){
+      throw error
+    }
+  }

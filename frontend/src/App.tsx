@@ -11,7 +11,7 @@ import AdminRoute from "Admin/Routes/AdminRoute";
 import AdminLayout from "Admin/Layout/AdminLayout";
 import ProductList from "Admin/Pages/ProductList";
 import { JSX } from "react";
-
+import ProductDetails, {loader as productDetailsLoader} from "Pages/ProductDetails";
 import { Navigate } from "react-router-dom";
 import Products, {loader as productLoader} from "Pages/Products";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -36,6 +36,12 @@ const App = () => {
            element={<Products/>}
            loader={productLoader}
             />
+            <Route 
+          path="products/:id"
+          element={<ProductDetails />}
+          loader={productDetailsLoader}
+        
+     />
         </Route>
         {/* Admin Routes */}
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>} >

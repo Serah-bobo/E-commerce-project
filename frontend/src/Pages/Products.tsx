@@ -1,3 +1,9 @@
+//suspense is used for lazy loading it shows a fallback maybe a spinner when data is loading
+//Link updates the URL and renders only the required components without reloading.
+//useSearchParams	Reads and updates URL query parameters for filtering,search,pagination
+//useLoaderData	Gets data loaded by a route before component renders this avoids unnecessary use of useEffect data is available instantly
+//create a loader function then use it in the route
+//Await	Used with Suspense to handle deferred data
 import { FetchAllProducts } from "Reducer/ProductReducer/ProductApi";
 import { Link, useSearchParams, useLoaderData, Await } from "react-router-dom";
 import { Suspense } from "react";
@@ -53,9 +59,18 @@ const Products = () => {
                                 className="object-cover w-full h-40 rounded-md"
                             />
                             <div className="mt-4">
-                                <h3 className="text-lg font-semibold">{product.name}</h3>
-                                <p className="text-gray-600">${product.price}</p>
-                                <span className="inline-block px-3 py-1 mt-2 text-sm bg-gray-200 rounded-full">{product.category}</span>
+                                <h3 className="text-lg font-bold ">{product.name}</h3>
+                              
+                                <p className="mb-2 text-sm text-black">Ksh{product.price}</p>
+                                <span className={`px-10 py-2 mt-4 text-sm font-semibold text-white rounded-md min-w-[100px] text-center
+                                    ${product.category?.toLowerCase().trim() === "tops" ? "bg-orange-500" : ""}
+                                    ${product.category?.toLowerCase().trim() === "shrugs" ? "bg-teal-800" : ""}
+                                    ${product.category?.toLowerCase().trim() === "hats" ? "bg-black" : ""}
+                                    
+                                `}>
+                                    {product.category}
+                                </span>
+
                             </div>
                         </Link>
                     </div>
@@ -70,14 +85,18 @@ const Products = () => {
             
             <div className="flex justify-center gap-4 mt-6">
                 {["Hats", "Tops", "Shrugs"].map(category => (
+                    
                     <button 
                         key={category}
                         onClick={() => handleFilterChange("category", category)}
-                        className={`px-5 py-2 rounded-md text-white transition-all duration-300 ${
-                            categoryFilter === category 
-                                ? "bg-blue-600 shadow-md" 
-                                : "bg-gray-500 hover:bg-gray-700"
-                        }`}
+                        className={`px-10 py-2 rounded-md text-white transition-all duration-300 text-center font-semibold 
+                            ${
+                                category === "Hats" ? "bg-black" :
+                                category === "Tops" ? "bg-teal-800" :
+                                category === "Shrugs" ? "bg-orange-500" :
+                                "bg-orange-200"
+                              }
+                            ${categoryFilter === category ? "shadow-lg scale-105" : "hover:opacity-80"}`}
                     >
                         {category}
                     </button>
@@ -85,7 +104,7 @@ const Products = () => {
                 {categoryFilter && (
                     <button 
                         onClick={() => handleFilterChange("category", null)}
-                        className="px-5 py-2 text-white transition-all duration-300 bg-red-500 rounded-md hover:bg-red-700"
+                        className="px-5 py-2 font-medium text-black underline transition-all duration-300"
                     >
                         Clear Filter
                     </button>
