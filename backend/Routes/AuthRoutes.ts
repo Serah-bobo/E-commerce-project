@@ -2,6 +2,8 @@ import express from 'express';
 import { registerUser,getUser,getAllUsers,loginUser } from '../Controllers/AuthController';
 import { logOut } from '../Controllers/AuthController';
 import { AuthMiddleware,authorizeAdmin } from '../Middleware/AuthMiddleware';
+import { updateUserProfile } from '../Controllers/AuthController';
+import upload from '../config/upload';
 const router = express.Router();
 
 // Register a new user
@@ -26,7 +28,8 @@ router.get('/admin', AuthMiddleware, authorizeAdmin, async (req, res, next) => {
     }
 });
 
-
+//
+router.put("/profile",AuthMiddleware , upload.single("profileImage"), updateUserProfile);
 export default router;
 
 

@@ -9,6 +9,7 @@ interface IUser extends Document {
     role:string
     email: string;
     password: string;
+    profileImage?:string
     tokens: { token: string }[];
     matchPassword(enteredPassword: string): Promise<boolean>;
 }
@@ -55,6 +56,10 @@ const UserSchema=new Schema({
         default: "user", // Default role is 'user'
         required: true,
       },
+      profileImage:{
+        type:String,
+        default:""
+      }
     
 },{timestamps:true})
 // Method to match password while logging in

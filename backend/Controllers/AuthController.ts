@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import User from "../Models/UserModel";
 import { Request, Response } from 'express'
+import bcrypt from "bcryptjs";
+import upload from "../config/upload";
 
 
 // Extend the Request interface to include token and User properties
@@ -136,4 +138,45 @@ export const logOut = async (req: AuthenticatedRequest, res: Response): Promise<
   } catch (error) {
     res.status(500).json({ msg: (error as Error).message });
   }
+};
+
+//update profile
+// Update User Profile
+export const updateUserProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  
+
+  
+
+    try {
+      const user = await User.findById(req.userID);
+      if (!user) {
+        res.status(404).json({ msg: "User not found" });
+        return;
+      }
+
+      const { name, email } = req.body;
+
+      if (name) user.name = name;
+      if (email) user.email = email;
+      
+      // Store uploaded image path
+      if (req.file) {
+        user.profileImage = `/uploads/${req.file.filename}`;
+      }
+
+      await user.save();
+
+      res.json({
+        msg: "Profile updated successfully",
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          profileImage: user.profileImage,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ msg: (error as Error).message });
+    }
+  
 };

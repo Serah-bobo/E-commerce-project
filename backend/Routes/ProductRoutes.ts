@@ -2,7 +2,6 @@ import express from 'express'
 import { getAllProducts,CreateProduct,getProductById,updateProduct,deleteProduct} from '../Controllers/ProductController'
 import { AuthMiddleware,authorizeAdmin } from '../Middleware/AuthMiddleware'
 import upload from '../config/upload'
-import multer from 'multer'
 const router=express.Router()
 
 router.route("/")

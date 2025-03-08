@@ -14,6 +14,7 @@ import { JSX } from "react";
 import ProductDetails, {loader as productDetailsLoader} from "Pages/ProductDetails";
 import { Navigate } from "react-router-dom";
 import Products, {loader as productLoader} from "Pages/Products";
+import Profile from "Components/Profile";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const isLoggedIn = localStorage.getItem("loggedin") === "true";
   return isLoggedIn ? children : <Navigate to="/signup" replace />;
@@ -41,7 +42,10 @@ const App = () => {
           element={<ProductDetails />}
           loader={productDetailsLoader}
         
-     />
+     /><Route
+      path="profile"
+      element={<Profile />}
+      />
         </Route>
         {/* Admin Routes */}
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>} >

@@ -55,6 +55,7 @@ export const LoginUser=async(email:string,password:string):Promise<AuthResponse>
         localStorage.setItem("token", data.token); // store token in localstorage
         localStorage.setItem("role", data.user.role); // Save role
         localStorage.setItem("loggedin", "true");
+        localStorage.setItem("user", JSON.stringify({ name: data.user.name, email: data.user.email }));
 
         return data;
     } catch (error) {
@@ -88,4 +89,39 @@ export const LogOutUser = async () => {
         console.error("Error logging out:", error);
         return false;
     }
+};
+
+//
+export const profileUpdate = async (
+  name: string,
+  email: string,
+  profileImage: File | null, // Allow image upload
+
+): Promise<User> => {
+  try {
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("email", email);
+      
+      if (profileImage) formData.append("profileImage", profileImage); // Append image
+
+      const response = await fetch(`${API_URL}/profile`, {
+          method: "PUT",
+          headers: {
+              Authorization: `Bearer ${token}`, // No need for Content-Type with FormData
+          },
+          body: formData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+          throw new Error(data.message || "Failed to update profile");
+      }
+
+      return data.user;
+  } catch (error) {
+      throw error;
+  }
 };
