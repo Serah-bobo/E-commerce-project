@@ -5,13 +5,17 @@ import { configureStore } from "@reduxjs/toolkit";
 // This reducer will manage the authentication state of the application.
 import authReducer from "./AuthSlice";
 import productReducer from './ProductReducer/ProductSlice'
+import cartReducer from './CartReducer/CartSlice'
 // Create and configure the Redux store.
 export const store = configureStore({
     reducer: {
         // The `auth` slice manages authentication-related state (e.g., login, logout, token storage).
         auth: authReducer, 
         product: productReducer,  // The `product` slice manages product-related state (e.g., fetching products, adding products)  // Add other slices as needed.  // Add other slices as needed.  // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed
+        cart: cartReducer, // The `cart` slice manages the shopping cart state (e.g., adding items, removing items, updating quantities)  // Add other slices as needed.  // Add other slices as needed.  // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices as needed.   // Add other slices
     },
+
+
 });
 
 // Define `RootState` type using TypeScript.

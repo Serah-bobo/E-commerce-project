@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
-
+import { useSelector } from "react-redux";
+import { RootState } from "Reducer/Store";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
@@ -12,7 +13,8 @@ const Navbar = () => {
   const profileRef = useRef<HTMLDivElement>(null);
 
   const isAdmin = localStorage.getItem("role") === "admin";
-
+  const productItems=useSelector((state:RootState)=>state.cart.items)
+  console.log(productItems)
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {

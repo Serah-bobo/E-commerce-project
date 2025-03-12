@@ -7,13 +7,15 @@
 import { FetchAllProducts } from "Reducer/ProductReducer/ProductApi";
 import { Link, useSearchParams, useLoaderData, Await } from "react-router-dom";
 import { Suspense } from "react";
-
+import { addCart } from "Reducer/CartReducer/CartApi";
 // Loader function
 export const loader = async () => {
     const fetchedData = await FetchAllProducts("");
     console.log("Fetched Products:", fetchedData);
     return { products: fetchedData?.products || [] };
 };
+
+
 
 const Products = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -27,7 +29,26 @@ const Products = () => {
             return newParams;
         });
     };
-
+    
+    //handle cart
+    const handleAddToCart = async (product: any) => {
+        const token = localStorage.getItem("token"); // Assuming you store the token in localStorage
+        if (!token) {
+            alert("You need to be logged in to add items to the cart!");
+            return;
+        }
+    
+        try {
+            const response = await addCart(product._id,1, token); // Adding 1 quantity by default
+            if (response) {
+                alert(`${product.name} added to cart!`);
+            }
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            alert("Failed to add item to cart.");
+        }
+    };
+    
     const renderProducts = (products: any[]) => {
         if (!Array.isArray(products) || products.length === 0) {
             return (
@@ -62,18 +83,19 @@ const Products = () => {
                                 <h3 className="text-lg font-bold ">{product.name}</h3>
                               
                                 <p className="mb-2 text-sm text-black">Ksh{product.price}</p>
-                                <span className={`px-10 py-2 mt-4 text-sm font-semibold text-white rounded-md min-w-[100px] text-center
-                                    ${product.category?.toLowerCase().trim() === "tops" ? "bg-orange-500" : ""}
-                                    ${product.category?.toLowerCase().trim() === "shrugs" ? "bg-teal-800" : ""}
-                                    ${product.category?.toLowerCase().trim() === "hats" ? "bg-black" : ""}
-                                    
-                                `}>
-                                    {product.category}
-                                </span>
+                               
 
                             </div>
                         </Link>
+                        <button
+                            onClick={() => handleAddToCart(product)}
+                             className="px-10 py-2 mt-4 text-sm font-semibold text-center text-white bg-orange-400 rounded-md hover:bg-orange-500 min-w-[100px]"
+                            >
+                        
+                              <span>Add to cart</span>  
+                            </button>
                     </div>
+                    
                 ))}
             </div>
         );
