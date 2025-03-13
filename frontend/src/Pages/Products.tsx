@@ -7,7 +7,8 @@
 import { FetchAllProducts } from "Reducer/ProductReducer/ProductApi";
 import { Link, useSearchParams, useLoaderData, Await } from "react-router-dom";
 import { Suspense } from "react";
-import { addCart } from "Reducer/CartReducer/CartApi";
+import { addToCart } from "Reducer/CartReducer/CartSlice";
+import { useDispatch } from "react-redux";
 // Loader function
 export const loader = async () => {
     const fetchedData = await FetchAllProducts("");
@@ -21,7 +22,8 @@ const Products = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const productLoader = useLoaderData();
     const categoryFilter = searchParams.get("category");
-
+    const dispatch=useDispatch()
+    
     const handleFilterChange = (key: string, value: string | null) => {
         setSearchParams((prevParams) => {
             const newParams = new URLSearchParams(prevParams);
@@ -29,25 +31,16 @@ const Products = () => {
             return newParams;
         });
     };
-    
-    //handle cart
-    const handleAddToCart = async (product: any) => {
-        const token = localStorage.getItem("token"); // Assuming you store the token in localStorage
-        if (!token) {
-            alert("You need to be logged in to add items to the cart!");
-            return;
-        }
-    
-        try {
-            const response = await addCart(product._id,1, token); // Adding 1 quantity by default
-            if (response) {
-                alert(`${product.name} added to cart!`);
-            }
-        } catch (error) {
-            console.error("Error adding to cart:", error);
-            alert("Failed to add item to cart.");
-        }
-    };
+    const handleAddToCart = (product:any) => {
+        dispatch(
+          addToCart({
+            id: product._id, 
+            name: product.name,
+            price: product.price,
+            image: product.image
+          })
+        );
+      };
     
     const renderProducts = (products: any[]) => {
         if (!Array.isArray(products) || products.length === 0) {

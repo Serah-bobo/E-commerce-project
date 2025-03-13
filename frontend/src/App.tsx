@@ -15,6 +15,7 @@ import ProductDetails, {loader as productDetailsLoader} from "Pages/ProductDetai
 import { Navigate } from "react-router-dom";
 import Products, {loader as productLoader} from "Pages/Products";
 import Profile from "Components/Profile";
+import Cart from "Pages/Cart";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const isLoggedIn = localStorage.getItem("loggedin") === "true";
   return isLoggedIn ? children : <Navigate to="/signup" replace />;
@@ -45,6 +46,10 @@ const App = () => {
      /><Route
       path="profile"
       element={<Profile />}
+      />
+      <Route
+      path="cart"
+      element={<Cart />}
       />
         </Route>
         {/* Admin Routes */}

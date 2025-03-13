@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "Reducer/Store";
+import {  HiOutlineShoppingCart } from "react-icons/hi2";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
@@ -13,6 +14,7 @@ const Navbar = () => {
   const profileRef = useRef<HTMLDivElement>(null);
 
   const isAdmin = localStorage.getItem("role") === "admin";
+  //cart items
   const productItems=useSelector((state:RootState)=>state.cart.items)
   console.log(productItems)
   useEffect(() => {
@@ -87,7 +89,18 @@ const Navbar = () => {
             <Link to="/products" style={location.pathname === "/products" ? activeStyles : undefined} className="px-3 py-2 font-bold text-black rounded-md hover:bg-gray-200">
               PRODUCTS
             </Link>
-
+            {/*cart*/}
+            <Link
+            to="/cart"
+            className="flex items-center p-1 px-2 rounded-sm sm:px-6"
+            >
+              <HiOutlineShoppingCart className="w-8 h-10 text-gray-600 hover:bg-orange-400" />
+             
+              {productItems.length > 0 ? 
+                <span className="text-sm font-semibold sm:ml-1 hover:bg-orange-400">{productItems.length}</span>:
+                <span className="text-sm font-semibold sm:ml-1 hover:bg-orange-400">0</span>
+              }
+            </Link>
             {/* Profile Dropdown (Desktop) */}
             <div className="relative" ref={profileRef}>
               <button onClick={toggleProfileDropdown} className="flex items-center focus:outline-none">
@@ -146,7 +159,18 @@ const Navbar = () => {
           <Link to="/products" style={location.pathname === "/products" ? activeStyles : undefined} className="block px-3 py-2 font-bold text-black rounded-md hover:bg-gray-200">
             PRODUCTS
           </Link>
-
+          
+          {/*cart*/}
+          <Link
+            to="/cart"
+            className="flex items-center p-1 px-2 rounded-sm sm:px-6"
+            >
+              <HiOutlineShoppingCart className="w-6 h-6 text-gray-600" />
+              {productItems.length > 0 ? 
+                <span className="text-sm font-semibold sm:ml-1 hover:bg-orange-400">{productItems.length}</span>:
+                <span className="text-sm font-semibold sm:ml-1">0</span>
+              }
+            </Link>
           {/* Profile Dropdown (Mobile) */}
           <div className="mt-4 border-t">
             <div className="flex items-center px-3 py-2 space-x-3">
