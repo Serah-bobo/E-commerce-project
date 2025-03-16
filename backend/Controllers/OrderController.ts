@@ -96,19 +96,35 @@ export const updateOrder=async(req:orderRequest,res:Response):Promise<void>=>{
 }
 
 // Delete an order (admin only)
-export const deleteOrder = async (req: orderRequest, res: Response):Promise<void>=> {
+export const deleteOrder = async (req: orderRequest, res: Response): Promise<void> => {
     try {
-      const { id } = req.params;
-  
-      const deletedOrder = await Order.findByIdAndDelete(id);
-  
-      if (!deletedOrder) {
-         res.status(404).json({ message: "Order not found" });
-         return;
-      }
-  
-      res.status(200).json({ message: "Order deleted successfully" });
+        const { id } = req.params;
+
+        // Find the order
+        const order = await Order.findById(id);
+
+        if (!order) {
+            res.status(404).json({ message: "Order not found" });
+            return;
+        }
+
+        // If user is not an admin, check if they own the order and if it's still pending
+        if (req.user?.role !== "admin") {
+            if (order.owner.toString() !== req.userID) {
+                res.status(403).json({ message: "You can only delete your own orders." });
+                return;
+            }
+            if (order.status !== "pending") {
+                res.status(400).json({ message: "You can only delete orders that are still pending." });
+                return;
+            }
+        }
+
+        // Delete the order
+        await order.deleteOne();
+
+        res.status(200).json({ message: "Order deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Error deleting order", error });
+        res.status(500).json({ message: "Error deleting order", error });
     }
-  };
+};

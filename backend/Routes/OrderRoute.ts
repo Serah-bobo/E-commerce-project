@@ -9,11 +9,14 @@ router.route("/admin/order")
 .get(AuthMiddleware,authorizeAdmin,getAllOrders)
 router.route("/admin/order/:id")
 .patch(AuthMiddleware,authorizeAdmin,updateOrder)
-.delete(AuthMiddleware,authorizeAdmin,deleteOrder)
+
 
 //user routes
 router.route("/user/order")
 .get(AuthMiddleware,getOrderUsers)
  .post(AuthMiddleware, createOrder);
+
+ router.delete("order/:id", AuthMiddleware, deleteOrder);
+
 
  export default router;
