@@ -6,7 +6,7 @@ import ProductRoute from "../Routes/ProductRoutes";
 import AuthRoute from '../Routes/AuthRoutes';
 import CartRoute from "../Routes/CartRoute";
 import path from "path";
-
+import OrderRouter from "../Routes/OrderRoute"
 
 
 
@@ -35,6 +35,7 @@ app.use(express.json());
 app.use("/api/products", ProductRoute);
 app.use("/api/auth", AuthRoute);
 app.use('/api', CartRoute);
+app.use('/api',OrderRouter)
 
 // Root route
 app.get("/", (req, res) => {

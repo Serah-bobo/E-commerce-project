@@ -70,11 +70,11 @@ const Products = () => {
                             <img 
                                 alt={product.name} 
                                 src={`http://localhost:5000${product.image}`} 
-                                className="object-cover w-full h-40 rounded-md"
+                                className="w-full p-2 transition-all duration-200 bg-cover rounded-md cursor-pointer hover:scale-105"
                             />
                             <div className="mt-4">
                                 <h3 className="text-lg font-bold ">{product.name}</h3>
-                              
+                            
                                 <p className="mb-2 text-sm text-black">Ksh{product.price}</p>
                                
 

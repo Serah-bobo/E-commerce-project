@@ -49,9 +49,11 @@ const Home = () => {
           <img src={product.image} alt={product.name} className="object-cover w-full h-64 rounded-md" />
           <h3 className="mt-4 text-xl font-semibold">{product.name}</h3>
           <p className="mt-2 text-lg font-medium text-gray-600">{product.price}</p>
-          <a href={`/product/${product.id}`} className="inline-block px-4 py-2 mt-3 text-white bg-pink-500 rounded-md hover:bg-pink-600">
+          <Link 
+          to="/products"
+          className="inline-block px-4 py-2 mt-3 text-white bg-pink-500 rounded-md hover:bg-pink-600">
           View More
-        </a>
+        </Link>
         
         </div>
       ))}

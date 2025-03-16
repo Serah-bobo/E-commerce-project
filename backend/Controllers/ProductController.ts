@@ -26,13 +26,12 @@ try{
 // Create a new product
 export const CreateProduct = async (req: CustomRequest, res: Response):Promise<void> => {
     try {
-      console.log("Request body:", req.body);
-      console.log("Request file:", req.file);
+     
       
       const { name, description, category, price } = req.body;
       const image = req.file ? `/uploads/${req.file.filename}` : ""; // Store image path
       
-      console.log("Image path:", image);
+     
       
     // Ensure only admins can create products
     if (!req.user || req.user.role !== "admin") {
@@ -65,7 +64,7 @@ export const CreateProduct = async (req: CustomRequest, res: Response):Promise<v
         message: 'Product created successfully',
         product: savedProduct,
       });
-      console.log(req.file); // Check if Multer processes the image
+    
 
     } catch (error) {
       res.status(500).json({ message: 'Server Error', error });
