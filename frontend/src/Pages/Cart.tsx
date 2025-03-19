@@ -46,6 +46,7 @@ const Cart = () => {
                                     </button>
                                 </div>
                                 <div className="flex items-center space-x-2">
+                                    
                                     <button
                                         onClick={() => dispatch(updateCartQuantity({ id: product.id, amount: -1 }))}
                                         className="px-2 py-1 text-white bg-gray-400 rounded hover:bg-gray-500"

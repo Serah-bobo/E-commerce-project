@@ -7,7 +7,7 @@ there is mutate,asyncMutate(function),isLoading,isError,isSuccess,error(details)
 //useQueryClient gives you access to queryClient to manage cached data and trigger refetching,invalidate queries
 import { useQuery,useMutation,useQueryClient } from "@tanstack/react-query";
 import { createOrder,fetchOrders,fetchUserOrder,updateOrderStatus,deleteOrder } from "./OrderApi";
-import { Order,OrderUpdate } from "./Types";
+import { Order } from "./Types";
 
 //create Order
 export const useCreateOrder=()=>{
@@ -17,7 +17,7 @@ export const useCreateOrder=()=>{
         onSuccess:()=>{
             queryClient.invalidateQueries({ queryKey: ["userOrders"] });
         },
-        onError:(error,mutationInfo)=>{
+        onError:(error)=>{
             console.error('Error creating order:',error);
         },
         
@@ -45,9 +45,9 @@ export const useFetchUserOrders=()=>{
 
 export const useUpdateOrderStatus=()=>{
     const queryClient=useQueryClient();
-    return useMutation<OrderUpdate>({
+    return useMutation({
         mutationFn:updateOrderStatus,
-        onSuccess:(_,order,mutationInfo)=>{
+        onSuccess:()=>{
             queryClient.invalidateQueries({ queryKey: ["allOrders"] }); // Refetch all orders
         }
     })
@@ -57,9 +57,9 @@ export const useUpdateOrderStatus=()=>{
 
 export const useDeleteOrder=()=>{
     const queryClient=useQueryClient();
-    return useMutation<void>({
+    return useMutation({
         mutationFn:deleteOrder,
-        onSuccess:(_,orderId,mutationInfo)=>{
+        onSuccess:()=>{
             queryClient.invalidateQueries({ queryKey: ["allOrders"] }); // Refetch all orders
             queryClient.invalidateQueries({ queryKey: ["userOrders"] }); // Refetch user orders
         }
