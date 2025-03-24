@@ -5,7 +5,7 @@ there is mutate,asyncMutate(function),isLoading,isError,isSuccess,error(details)
 */
 //useQuery is used for fetching and caching data,runs automatically,cached automatically
 //useQueryClient gives you access to queryClient to manage cached data and trigger refetching,invalidate queries
-import { useQuery,useMutation,useQueryClient } from "@tanstack/react-query";
+import { useQuery,useMutation,useQueryClient ,UseQueryResult} from "@tanstack/react-query";
 import { createOrder,fetchOrders,fetchUserOrder,updateOrderStatus,deleteOrder } from "./OrderApi";
 import { Order } from "./Types";
 
@@ -15,7 +15,7 @@ export const useCreateOrder=()=>{
     return useMutation({
         mutationFn:createOrder,
         onSuccess:()=>{
-            queryClient.invalidateQueries({ queryKey: ["userOrders"] });
+            queryClient.invalidateQueries({ queryKey: ["createOrders"] });
         },
         onError:(error)=>{
             console.error('Error creating order:',error);
@@ -28,19 +28,24 @@ export const useCreateOrder=()=>{
 
 export const useFetchOrders=()=>{
     return useQuery<Order[]>({
-        queryKey:["userOrders"],
+        queryKey:["allOrders"],
         queryFn:fetchOrders,
+        staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
+         retry: 3, // Retry failed requests up to 3 times
+
     })
 }
 
 //fetch user orders
 
-export const useFetchUserOrders=()=>{
-    return useQuery<Order[]>({
-        queryKey:["userOrders"],
-        queryFn:fetchUserOrder
-    })
-}
+
+
+export const useFetchUserOrders = (): UseQueryResult<Order[]> => {
+  return useQuery<Order[]>({
+    queryKey: ["userOrders"],
+    queryFn: fetchUserOrder,
+  });
+};
 //update order
 
 export const useUpdateOrderStatus=()=>{

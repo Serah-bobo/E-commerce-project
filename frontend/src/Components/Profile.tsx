@@ -10,7 +10,7 @@ interface User {
 const Profile = () => {
     const [user, setUser] = useState<User>({ name: "", email: "", profileImage: "" });
     const [previewImage, setPreviewImage] = useState<string | null>(null);
-
+    
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
 

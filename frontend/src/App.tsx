@@ -16,6 +16,7 @@ import { Navigate } from "react-router-dom";
 import Products, {loader as productLoader} from "Pages/Products";
 import Profile from "Components/Profile";
 import Cart from "Pages/Cart";
+import OrdersPage from "Pages/Orders";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const isLoggedIn = localStorage.getItem("loggedin") === "true";
   return isLoggedIn ? children : <Navigate to="/signup" replace />;
@@ -30,28 +31,17 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} /> {/* Logout Route */}
-        <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route
-           path="products" 
-           element={<Products/>}
-           loader={productLoader}
-            />
-            <Route 
-          path="products/:id"
-          element={<ProductDetails />}
-          loader={productDetailsLoader}
-        
-     /><Route
-      path="profile"
-      element={<Profile />}
-      />
-      <Route
-      path="cart"
-      element={<Cart />}
-      />
-        </Route>
+        <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="products" element={<Products />} loader={productLoader} />
+        <Route path="products/:id" element={<ProductDetails />} loader={productDetailsLoader} />
+        <Route path="cart" element={<Cart />} />
+      
+        <Route path="profile" element={<Profile />}/>
+        <Route path="orders" element={<OrdersPage />} />
+      </Route>
+
         {/* Admin Routes */}
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>} >
       <Route index element={<ProductList/>}/>

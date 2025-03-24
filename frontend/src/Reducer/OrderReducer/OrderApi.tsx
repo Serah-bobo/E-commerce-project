@@ -61,7 +61,7 @@ export const fetchUserOrder=async()=>{
                 'Authorization': `Bearer ${token}`
             }
         });
-        const data=await response.json();
+        const data:[Order]=await response.json();
         if(!response.ok){
             throw new Error("Failed to fetch order")
         }
