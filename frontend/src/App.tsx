@@ -17,6 +17,7 @@ import Products, {loader as productLoader} from "Pages/Products";
 import Profile from "Components/Profile";
 import Cart from "Pages/Cart";
 import OrdersPage from "Pages/Orders";
+import CheckoutPage from "Pages/CheckoutPage";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const isLoggedIn = localStorage.getItem("loggedin") === "true";
   return isLoggedIn ? children : <Navigate to="/signup" replace />;
@@ -40,6 +41,7 @@ const App = () => {
       
         <Route path="profile" element={<Profile />}/>
         <Route path="orders" element={<OrdersPage />} />
+        <Route path="checkout" element={<CheckoutPage />}/>
       </Route>
 
         {/* Admin Routes */}
