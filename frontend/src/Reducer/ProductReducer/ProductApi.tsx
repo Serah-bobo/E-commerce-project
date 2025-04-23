@@ -9,15 +9,9 @@ export interface Product {
   }
 
   //fetch all products
-  export const FetchAllProducts=async(
-    id:String
-  )=>{
-    
+  export const FetchAllProducts=async(id:String)=>{
     try{
-      const response = await fetch
-      (
-        `${API_URL}`
-      );
+      const response = await fetch( `${API_URL}`);
       const data=await response.json()
       if(!response.ok){
         throw new Error("Failed to fetch products")

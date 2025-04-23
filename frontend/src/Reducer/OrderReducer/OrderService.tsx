@@ -30,8 +30,8 @@ export const useFetchOrders=()=>{
     return useQuery<Order[]>({
         queryKey:["allOrders"],
         queryFn:fetchOrders,
-        staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
-         retry: 3, // Retry failed requests up to 3 times
+       // staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
+        // retry: 3, // Retry failed requests up to 3 times
 
     })
 }
