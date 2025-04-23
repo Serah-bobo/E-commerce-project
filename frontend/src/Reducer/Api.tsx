@@ -1,4 +1,4 @@
-const API_URL = "https://e-commerce-project-2-tm7m.onrender.com/api/auth";
+const API_URL = "http://localhost:5000/api/auth";
 
 
 // Define user type based on schema
