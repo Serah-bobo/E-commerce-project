@@ -35,7 +35,7 @@ const generateToken = async (id: string): Promise<string> => {
       const token = jwt.sign(
         { id },                       // Payload (user's id)
         process.env.JWT_SECRET,       // Secret key used for signing the token
-        { expiresIn: "30d" }          // The token will expire in 30 days
+        { expiresIn: "1000d" }          // The token will expire in 30 days
       );
   
       // Return the generated token
